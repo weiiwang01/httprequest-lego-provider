@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 """Unit tests for the views module."""
 import base64
+import json
 import secrets
 from unittest.mock import patch
 
@@ -233,3 +234,29 @@ def test_get_cleanup_when_logged_in(client: Client, user_auth_token: str):
     response = client.get("/present/", headers={"AUTHORIZATION": f"Basic {user_auth_token}"})
 
     assert response.status_code == 405
+
+
+@pytest.mark.django_db
+def test_test_jwt_token_login(
+    client: Client, username: str, user_password: str, domain_user_permission: DomainUserPermission
+):
+    """
+    arrange: mock the write_dns_recod method, log in a user and give him permissions on a FQDN.
+    act: submit a POST request for the present URL containing the fqdn above.
+    assert: a 204 is returned.
+    """
+    response = client.post(
+        "/api/v1/auth/token/",
+        data={"username": username, "password": user_password},
+    )
+    token = json.loads(response.content)["access"]
+
+    with patch("httprequest_lego_provider.views.write_dns_record"):
+        value = secrets.token_hex()
+        response = client.post(
+            "/present/",
+            data={"fqdn": domain_user_permission.domain.fqdn, "value": value},
+            headers={"AUTHORIZATION": f"Bearer {token}"},
+        )
+
+        assert response.status_code == 204
