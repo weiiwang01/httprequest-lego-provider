@@ -2,7 +2,7 @@
 # See LICENSE file for licensing details.
 
 name: httprequest-lego-provider
-base: ubuntu:22.04
+base: ubuntu@22.04
 version: "0.1"
 summary: A Django application implementing HTTPRequest Lego Provider
 description: |
@@ -20,8 +20,10 @@ extensions:
 parts:
     # Exclude pyproject.yaml so that the python plugin doesn't handle this project as a package
     django-framework/dependencies:
+        stage-packages:
+            - git
         override-build: |
-            rm pyproject.toml
+            rm -f pyproject.toml
             craftctl default
     django-framework/install-app:
         prime:
