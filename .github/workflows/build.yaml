@@ -1,7 +1,25 @@
-name: Build Rock and Charm
+name: Build 12-factor Rock and Charm
 
 on:
-  pull_request:
+  workflow_call:
+    inputs:
+      rockcraft-repository:
+        required: true
+        type: string
+        default: canonical/rockcraft
+      rockcraft-ref:
+        required: true
+        type: string
+        default: feature/12f
+      charmcraft-repository:
+        required: true
+        type: string
+        default: canonical/charmcraft
+      charmcraft-ref:
+        required: true
+        type: string
+        default: feature/12f
+
 
 jobs:
   build-rock:
@@ -10,8 +28,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: weiiwang01/rockcraft
-          ref: feat-12f-django
+          repository: ${{ inputs.rockcraft-repository }}
+          ref: ${{ inputs.rockcraft-ref }}
           path: rockcraft
           fetch-depth: 0
 
@@ -80,8 +98,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: weiiwang01/charmcraft
-          ref: feat-12f-django
+          repository: ${{ inputs.charmcraft-repository }}
+          ref: ${{ inputs.charmcraft-ref }}
           path: charmcraft
           fetch-depth: 0
 
