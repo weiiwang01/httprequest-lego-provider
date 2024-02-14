@@ -154,7 +154,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ./*.charm
-          key: ${{ steps.charm-cache-key.outputs.sha }}
+          key: ${{ steps.charm-cache-key.outputs.key }}
 
       - name: Build Charm
         env:
