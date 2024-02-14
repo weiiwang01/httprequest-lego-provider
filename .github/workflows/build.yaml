@@ -4,19 +4,15 @@ on:
   workflow_call:
     inputs:
       rockcraft-repository:
-        required: true
         type: string
         default: canonical/rockcraft
       rockcraft-ref:
-        required: true
         type: string
         default: feature/12f
       charmcraft-repository:
-        required: true
         type: string
         default: canonical/charmcraft
       charmcraft-ref:
-        required: true
         type: string
         default: feature/12f
 
