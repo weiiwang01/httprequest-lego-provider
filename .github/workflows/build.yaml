@@ -144,12 +144,17 @@ jobs:
 
       - uses: actions/checkout@v4
 
+      - name: Charm Cache Key
+        id: charm-cache-key
+        # rebuild the charm at least once a week
+        run: echo "key=charm-${{ hashFiles('./charm') }}-$( date +'%Y-week-%V' )" >> $GITHUB_OUTPUT
+
       - name: Restore Charm Cache
         id: restore-charm
         uses: actions/cache/restore@v4
         with:
           path: ./*.charm
-          key: charm-${{ hashFiles('./charm') }}
+          key: ${{ steps.charm-cache-key.outputs.sha }}
 
       - name: Build Charm
         env:
